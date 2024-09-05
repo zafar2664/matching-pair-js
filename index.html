@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game | Javascript</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Memory Game</h2>
+        <div class="game"></div>
+        <button class="reset" onclick="window.location.reload();">Reset Game</button>
+    </div>
+    <script>
+        const emojis = ["😍","😍","😛","😛","🦜","🦜","❤","❤","🏏","🏏","🎉","🎉","✌","✌","👍","👍"];
+        var shuf_emojis = emojis.sort(() => (Math.random() > .5) ? 2 : -1);
+        let previousItem = null;
+        for( var i=0; i < emojis.length; i++){
+            let box = document.createElement('div')
+            box.className = 'item';
+            box.setAttribute('data-value' , emojis[i]);
+            box.innerHTML = shuf_emojis[i];
+            document.querySelector('.game').appendChild(box);
+            const items = document.querySelectorAll('.item');
+            console.log(items);
+            items.forEach(item => item.addEventListener('click'  , startGame));
+        }
+
+        let previousElement = null; // Variable to store the previous clicked element
+        // Variable to store the previous item's data value
+
+  
+        let isChecking = false;     // Flag to prevent clicking while checking
+
+         function startGame() {
+            if (isChecking) return;  // Prevent further clicks while checking
+
+                   let currentItem = this.getAttribute('data-value'); // Get the current item's value
+                   console.log('Previous item:', previousItem);       // Log the previous item
+                   console.log('Current item:', currentItem);         // Log the current item
+
+                   this.classList.add('boxOpen'); // Show the current box
+
+                  if (previousElement) { // If there is a previously clicked element
+                   if (currentItem === previousItem) { // Check if the current and previous items match
+                     console.log("Matched");
+                     // Keep both boxes open by leaving the class 'boxOpen'
+                     previousElement = null; // Reset previous element
+                     previousItem = null; // Reset previous item
+                    } else {
+                     console.log("Not matched");
+                     isChecking = true; // Set the flag to prevent further clicks
+
+                     setTimeout(() => {
+                     this.classList.remove('boxOpen'); // Close the current box
+                     previousElement.classList.remove('boxOpen'); // Close the previous box
+                     previousElement = null; // Reset previous element
+                     previousItem = null; // Reset previous item
+                     isChecking = false; // Allow further clicks
+                   }, 2000);
+               }
+            } else {
+            // Store the current element and value as the previous element and value
+            previousElement = this;
+            previousItem = currentItem;
+          }
+        }
+
+
+
+    </script>
+</body>
+</html>
